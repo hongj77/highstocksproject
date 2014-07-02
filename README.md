@@ -1,4 +1,2 @@
-highstocksproject
+Onping Data Analysis
 =================
-
-Making sophisticated graphs with highstock
