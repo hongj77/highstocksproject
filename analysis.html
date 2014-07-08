@@ -1,0 +1,224 @@
+<div class="page">
+
+	<div class='chart-container'>
+		<div id="chart">	
+		</div>
+	</div>
+
+	<div class='container'>
+		<div class='row text-center' id='custom-input'>
+			<div class='span5 offset2 pull-left'>
+				<div id='fromDate' class='pull-left'>
+					From
+					<input ui-date id='from' class='input-medium text-center' ng-model='fromDate' ng-change='setStart(fromDate)'>
+				</div> 
+				<div id='toDate' class='pull-left'>
+					To &nbsp &nbsp
+					<input ui-date id='to' class='input-medium text-center' ng-model='toDate' ng-change='setEnd(toDate)'>
+				</div> 
+			</div> <!-- end left block-->
+
+			<div id='number-field' class='span5 pull-left'>
+			<span class='pull-left' id='number-description'>View the last</span>
+				<div class='pull-left'>
+					<input type='text' class='input-mini text-center' id='last' ng-model='customNum' ng-click='reset()' >
+					<select class='input-medium' ng-model='customRange' ng-change='changeTime(customRange)'>
+						<option value='mi'>Minutes</option>
+						<option value='h' selected='selected'>Hours</option>
+						<option value='d'>Days</option>
+						<option value='mo'>Months</option>
+					</select>
+				</div>
+			</div> <!-- end right block -->
+		</div> <!-- end time select row -->
+
+		<hr>	
+
+		<div class='row' style='margin-bottom:30px;'> <!-- selector row for sites, locations, companies -->
+			<div class='span4'>
+				<div class='select-description text-center'>
+					<div class='select-search'>
+						<input type='search' placeholder='Search a company' ng-model='companySearch' id='cSearch'> &nbsp <i class="fa fa-search"></i>
+					</div>
+					<div class='select-title'>
+						<span ng-click='sortComp()'><i class="fa fa-cog"></i> &nbsp Select a company</span> 
+						<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingComp == true'></i>
+						<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingComp == false'></i>	
+						<button class='btn btn-default' ng-click='toggleAllComp(true)' ng-hide='compAll'><i class="fa fa-check"></i>All</button>
+						<button class='btn btn-danger' ng-click='toggleAllComp(false)' ng-show='compAll'><i class="fa fa-check"></i>None</button>
+					</div>	
+				</div> <!-- end select description -->
+
+				<div class='select-container'>
+					<table class='table table-bordered table-striped table-hover'>
+						<tbody>
+							<tr ng-hide='companies' style='color: grey;'>
+								<td style='width=100%;'>
+									Loading ...
+								</td>
+							</tr>
+							<tr ng-repeat='company in companies | filter:companySearch' ng-click='checkCompanies(company)'>
+								<td style='width=100%;'>
+									<i class='fa fa-square-o' ng-hide='checkedCompanies[company.key]'></i>
+									<i class='fa fa-check-square-o' ng-show='checkedCompanies[company.key]'></i>
+									{{company.value.name}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- end select container --> 
+			</div> <!-- end company div -->
+
+			<div class='span4'>
+				<div class='select-description text-center'>
+					<div class='select-search'>
+						<input type='search' placeholder='Search a site' ng-model='siteSearch' id='sSearch'>
+						&nbsp <i class="fa fa-search"></i> 
+					</div>
+					<div class='select-title'>
+						<span ng-click='sortSite()'><i class="fa fa-cog"></i> &nbsp Select a site</span>
+						<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingSite == true'></i>
+						<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingSite == false'></i>
+						<button class='btn btn-default' ng-click='toggleAllSite(true)' ng-hide='siteAll'><i class="fa fa-check"></i>All</button>
+						<button class='btn btn-danger' ng-click='toggleAllSite(false)' ng-show='siteAll'><i class="fa fa-check"></i>None</button>
+					</div>
+				</div> <!-- end select description -->
+				<div class='select-container'>
+					<table class='table  table-bordered table-striped table-hover'>
+						<tbody>
+							<tr ng-hide='sites' style='color: grey;'>
+								<td>
+									No company selected
+								</td>
+							</tr>
+							<tr ng-repeat='site in sites | filter:siteSearch' ng-click='checkSites(site)'>
+								<td>
+									<i class='fa fa-square-o' ng-hide='checkedSites[site.key]'></i>
+									<i class='fa fa-check-square-o' ng-show='checkedSites[site.key]'></i>
+									{{site.value.name}}
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div> <!-- end select container --> 
+			</div> <!-- end site div -->
+
+			<div class='span4'>
+				<div class='select-description text-center'>
+					<div class='select-search'>
+						<input type='search' placeholder='Search a location' ng-model='locationSearch' id='lSearch'>&nbsp <i class="fa fa-search" style=''></i> 
+					</div>	
+					<div class='select-title'>
+						<span ng-click='sortLoc()'><i class="fa fa-cog"></i> &nbsp Select a location</span>
+						<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingLoc == true'></i>
+						<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingLoc == false'></i>
+						
+						<button class='btn btn-default' ng-click='toggleAllLoc(true)' ng-hide='locAll'><i class="fa fa-check"></i>All</button>
+						<button class='btn btn-danger' ng-click='toggleAllLoc(false)' ng-show='locAll'><i class="fa fa-check"></i>None</button>
+					</div>
+				</div> <!-- end select description -->
+				<div class='select-container'>
+					<table class='table table-bordered table-striped table-hover'>
+						<tbody>
+							<tr ng-hide='locations' style='color: grey;'>
+								<td>
+									No site selected
+								</td>
+							</tr>
+							<tr ng-repeat='location in locations | filter:locationSearch' ng-click='checkLocations(location)'>
+								<td>
+									<i class='fa fa-square-o' ng-hide='checkedLocations[location.key]'></i>
+									<i class='fa fa-check-square-o' ng-show='checkedLocations[location.key]'></i>
+									{{location.value.name}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- end select container -->
+			</div> <!-- end location div -->
+		</div> <!-- end selector row -->
+
+		<div class='row' ng-show='parameters'>
+			<div class='span12'>
+				<div class='select-description text-center'>
+					<div class='text-center param-dec'>
+						&nbsp&nbsp&nbsp <input type='search' placeholder='Search a parameter' ng-model='parameterSearch' id='pSearch'> &nbsp <i class="fa fa-search"></i>
+						<div class='select-title'>
+							<i class="fa fa-cog"></i> &nbsp <b>Select a parameter</b> &nbsp&nbsp &nbsp &nbsp 
+							<button class='btn btn-default' ng-click='toggleAllParam(true)' ng-hide='paramAll'><i class="fa fa-check"></i>All</button>
+							<button class='btn btn-danger' ng-click='toggleAllParam(false)' ng-show='paramAll'><i class="fa fa-check"></i>None</button>
+							<button class='btn btn-success' ng-click='refreshParams()'><i class="fa fa-refresh"></i> Clear and Refresh</button>
+						</div>
+					</div>	
+				</div> <!-- end select description -->
+
+				<div style='overflow-x: auto'>
+					<table class='table table-bordered table-striped table-hover' style="margin-bottom: 0;">
+						
+					</table>
+
+					<div class='param-container'>
+						<table class='table table-bordered table-striped table-hover'>	
+							<thead>
+								<tr>
+									<th style='width:7%'>Select</th>
+									<th style='width:7%'>Active</th>
+									<th style='width:10%'>Writeable</th>
+									<th ng-click='sortDescription()' style='width:25%'>
+										Description
+										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingDes == true'></i>
+										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingDes == false'></i>
+									</th>
+									<th ng-click='sortParamLoc()' style='width:20%'>
+										Location
+										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingParamLoc == true'></i>
+										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingParamLoc == false'></i>
+									</th>
+									<th ng-click='sortResult()' style='width:10%'>
+										Result
+										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingRes == true'></i>
+										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingRes == false'></i>
+									</th>
+									<th ng-click='sortTime()' style='width:21%'>
+										Last Update
+										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingTime == true'></i>
+										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingTime == false'></i>
+									</th>
+								</tr>
+							</thead>
+							<tbody style="height:400px;">
+								<tr ng-repeat='parameter in parameters | filter:parameterSearch' ng-click='checkParameters(parameter)'>
+									<td style='width:7%'>
+										<i class='fa fa-square-o' ng-hide='checkedParameters[parameter.pid]'></i>
+										<i class='fa fa-check-square-o' ng-show='checkedParameters[parameter.pid]'></i>
+									</td>
+									<td style='width:7%'>
+										{{parameter.status_active}}
+									</td>
+									<td style='width:10%'>
+										{{parameter.status_writable}}
+									</td>
+									<td style='width:25%'>
+										{{parameter.description}}
+									</td>
+									<td style='width:20%'>
+										{{parameter.location.name}}
+									</td>
+									<td style='width:10%'>
+										{{parameter.result}}
+									</td>
+									<td style='width:21%'>
+										{{parameter.last_update}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div> <!-- end param row -->
+	</div> <!-- container -->
+
+</div>

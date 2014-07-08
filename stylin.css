@@ -1,0 +1,66 @@
+
+.page {
+	font-family: Helvetica;
+	font-size: 20px;
+}
+
+.chart-container {
+	width: 100%;
+	overflow: auto;
+}
+
+#chart{
+	min-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#custom-input {
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+#fromDate, #toDate {
+	padding-right: 20px;
+	padding-bottom: 10px;
+}
+
+#number-field {
+	font-size: 20px;
+}
+
+#number-description {
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+
+.select-container, .param-container {
+	font-size: 21px;
+	font-family: Helvetica;
+	cursor: pointer;
+	overflow: auto;
+	max-height: 400px;
+}
+
+.select-description {
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.select-title {
+	margin-bottom: 10px;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.param-dec {
+	font-size: 25px;
+	margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+
+	.select-title {
+		font-size: 20px;
+	}
+}
