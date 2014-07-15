@@ -1,3 +1,6 @@
+small {
+	font-size: 10px;
+}
 
 .page {
 	font-family: Helvetica;
@@ -7,18 +10,19 @@
 .chart-container {
 	width: 100%;
 	overflow: auto;
+	margin-bottom: 50px;
 }
 
 #chart{
-	min-width: 800px;
 	margin-left: auto;
-	margin-right: auto;
+	margin-right: auto;                                                        
 }
 
 #custom-input {
 	margin-top: 30px;
 	margin-bottom: 20px;
 }
+
 
 #fromDate, #toDate {
 	padding-right: 20px;
@@ -37,9 +41,19 @@
 .select-container, .param-container {
 	font-size: 21px;
 	font-family: Helvetica;
-	cursor: pointer;
 	overflow: auto;
-	max-height: 400px;
+}
+
+.select-container {
+	max-height: 300px;
+}
+
+.param-container {
+	max-height: 800px;
+}
+
+.param-buttons, .param-search {
+	display: inline;
 }
 
 .select-description {
@@ -58,9 +72,38 @@
 	margin-bottom: 10px;
 }
 
+.fa-check-circle {
+	color: #009933;
+}
+
+.fa-exclamation-triangle {
+	color: #FF9900;
+}
+
+.fa-eye-slash, .fa-eye {
+	font-size: 30px;
+	color: #336699;
+	cursor: pointer;
+}
+
+
+
 @media (max-width: 480px) {
 
 	.select-title {
 		font-size: 20px;
+	}
+
+	.param-buttons, .param-search {
+		display: block;
+		margin-top: 10px;
+	}
+
+	.param-container {
+		max-height: 300px;
+	}
+
+	.select-container {
+		max-height: 200px;
 	}
 }

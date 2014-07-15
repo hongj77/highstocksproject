@@ -6,35 +6,54 @@
 	</div>
 
 	<div class='container'>
-		<div class='row text-center' id='custom-input'>
-			<div class='span5 offset2 pull-left'>
-				<div id='fromDate' class='pull-left'>
-					From
-					<input ui-date id='from' class='input-medium text-center' ng-model='fromDate' ng-change='setStart(fromDate)'>
-				</div> 
-				<div id='toDate' class='pull-left'>
-					To &nbsp &nbsp
-					<input ui-date id='to' class='input-medium text-center' ng-model='toDate' ng-change='setEnd(toDate)'>
-				</div> 
-			</div> <!-- end left block-->
 
-			<div id='number-field' class='span5 pull-left'>
-			<span class='pull-left' id='number-description'>View the last</span>
-				<div class='pull-left'>
-					<input type='text' class='input-mini text-center' id='last' ng-model='customNum' ng-click='reset()' >
-					<select class='input-medium' ng-model='customRange' ng-change='changeTime(customRange)'>
-						<option value='mi'>Minutes</option>
-						<option value='h' selected='selected'>Hours</option>
-						<option value='d'>Days</option>
-						<option value='mo'>Months</option>
-					</select>
-				</div>
-			</div> <!-- end right block -->
+		<div class='row text-center'>
+			<div class='span12'>
+				Graph Height: 
+				<button ng-click='resizeGraph(0)'>+</button>
+				<button ng-click='resizeGraph(1)'>-</button>
+				<button ng-click='resizeGraph(2)'>Reset</button>
+			</div>
+		</div>
+
+		<div class='row' id='custom-input'>
+			<form class='form-inline'>
+				<div class='span5 offset2 pull-left'>
+					<div id='fromDate' class='pull-left'>
+						From
+						<input ui-date id='from' class='input-medium text-center' ng-model='fromDate' ng-change='setStart(fromDate)'>
+					</div> 
+					<div id='toDate' class='pull-left'>
+						To &nbsp &nbsp
+						<input ui-date id='to' class='input-medium text-center' ng-model='toDate' ng-change='setEnd(toDate)'>
+					</div> 
+				</div> <!-- end left block-->
+
+				<div id='number-field' class='span5 pull-left'>
+				<span class='pull-left' id='number-description'>View the last</span>
+					<div class='pull-left'>
+						<input type='text' class='input-mini text-center' id='last' ng-model='customNum' ng-click='reset()' >
+						<select class='input-medium' ng-model='customRange' ng-change='changeTime(customRange)'>
+							<option value='mi'>Minutes</option>
+							<option value='h' selected='selected'>Hours</option>
+							<option value='d'>Days</option>
+							<option value='mo'>Months</option>
+						</select>
+					</div>
+				</div> <!-- end right block -->
+			</form>
 		</div> <!-- end time select row -->
 
 		<hr>	
 
-		<div class='row' style='margin-bottom:30px;'> <!-- selector row for sites, locations, companies -->
+		<div class='row' ng-click='hideSelect()'>
+			<div class='span12'>
+				<i class="fa fa-eye pull-right" ng-show='selectHidden == false'></i>
+				<i class="fa fa-eye-slash pull-right" ng-show='selectHidden == true'></i>
+			</div>
+		</div>
+
+		<div class='row' style='margin-bottom:30px;' id='selectRow'> <!-- selector row for sites, locations, companies -->
 			<div class='span4'>
 				<div class='select-description text-center'>
 					<div class='select-search'>
@@ -143,72 +162,100 @@
 			<div class='span12'>
 				<div class='select-description text-center'>
 					<div class='text-center param-dec'>
-						&nbsp&nbsp&nbsp <input type='search' placeholder='Search a parameter' ng-model='parameterSearch' id='pSearch'> &nbsp <i class="fa fa-search"></i>
 						<div class='select-title'>
-							<i class="fa fa-cog"></i> &nbsp <b>Select a parameter</b> &nbsp&nbsp &nbsp &nbsp 
-							<button class='btn btn-default' ng-click='toggleAllParam(true)' ng-hide='paramAll'><i class="fa fa-check"></i>All</button>
-							<button class='btn btn-danger' ng-click='toggleAllParam(false)' ng-show='paramAll'><i class="fa fa-check"></i>None</button>
-							<button class='btn btn-success' ng-click='refreshParams()'><i class="fa fa-refresh"></i> Clear and Refresh</button>
+							<form class='form-inline'>
+								<i class="fa fa-cog"></i> &nbsp <b>Select a parameter</b> &nbsp &nbsp &nbsp
+								<div class='param-buttons'>
+									<button class='btn btn-default' ng-click='toggleAllParam(true)' ng-hide='paramAll'><i class="fa fa-check"></i>All</button>
+									<button class='btn btn-danger' ng-click='toggleAllParam(false)' ng-show='paramAll'><i class="fa fa-check"></i>None</button>
+									<button class='btn btn-default' ng-click='toggleAllY2Param(true)' ng-hide='paramY2All'><i class="fa fa-check"></i>All Y2</button>
+									<button class='btn btn-danger' ng-click='toggleAllY2Param(false)' ng-show='paramY2All'><i class="fa fa-check"></i>None</button>
+									<button class='btn btn-success' ng-click='refreshParams()'><i class="fa fa-refresh"></i> Clear and Refresh</button>
+								</div>
+								<div class='param-search'>
+								&nbsp&nbsp&nbsp <input type='search' placeholder='Search a parameter' ng-model='parameterSearch' id='pSearch'> &nbsp <i class="fa fa-search"></i> </div>
+							</form>
 						</div>
 					</div>	
 				</div> <!-- end select description -->
 
-				<div style='overflow-x: auto'>
-					<table class='table table-bordered table-striped table-hover' style="margin-bottom: 0;">
-						
-					</table>
-
+				<div>
 					<div class='param-container'>
 						<table class='table table-bordered table-striped table-hover'>	
 							<thead>
 								<tr>
-									<th style='width:7%'>Select</th>
-									<th style='width:7%'>Active</th>
-									<th style='width:10%'>Writeable</th>
-									<th ng-click='sortDescription()' style='width:25%'>
+									<th>Select</th>
+									<th>
+										<div>
+											Second
+											<br>
+											 Y-Axis
+										</div>
+									</th>
+									<th ng-click='sortPid()'>
+										PID 
+										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingPid == true'></i>
+										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingPid == false'></i>
+									</th>
+									<th>Active</th>
+									<th>Writeable</th>
+									<th ng-click='sortDescription()'>
 										Description
 										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingDes == true'></i>
 										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingDes == false'></i>
 									</th>
-									<th ng-click='sortParamLoc()' style='width:20%'>
+									<th ng-click='sortParamLoc()'>
 										Location
 										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingParamLoc == true'></i>
 										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingParamLoc == false'></i>
 									</th>
-									<th ng-click='sortResult()' style='width:10%'>
+									<th ng-click='sortResult()'>
 										Result
 										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingRes == true'></i>
 										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingRes == false'></i>
 									</th>
-									<th ng-click='sortTime()' style='width:21%'>
+									<th ng-click='sortTime()'>
 										Last Update
 										<i class="fa fa-angle-double-up" style='color:#00CC00;' ng-show='ascendingTime == true'></i>
 										<i class="fa fa-angle-double-down" style='color:#CC3300;' ng-show='ascendingTime == false'></i>
 									</th>
 								</tr>
 							</thead>
-							<tbody style="height:400px;">
-								<tr ng-repeat='parameter in parameters | filter:parameterSearch' ng-click='checkParameters(parameter)'>
-									<td style='width:7%'>
+							<tbody>
+								<tr ng-repeat='parameter in parameters | filter:parameterSearch'>
+									<!-- select -->
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
 										<i class='fa fa-square-o' ng-hide='checkedParameters[parameter.pid]'></i>
 										<i class='fa fa-check-square-o' ng-show='checkedParameters[parameter.pid]'></i>
+										<span ng-show='parameter.y1Loading'><small>Loading..</small></span>
 									</td>
-									<td style='width:7%'>
-										{{parameter.status_active}}
+									<!-- second y axis -->
+									<td ng-click='checkParameters(parameter,true)' style='cursor:pointer'>
+										<i class='fa fa-square-o' ng-hide='checkedParametersY2[parameter.pid]'></i>
+										<i class='fa fa-check-square-o' ng-show='checkedParametersY2[parameter.pid]'></i>
+										<span ng-show='parameter.y2Loading'><small>Loading..</small></span>
 									</td>
-									<td style='width:10%'>
-										{{parameter.status_writable}}
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
+										{{parameter.pid}}
 									</td>
-									<td style='width:25%'>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
+										<i class="fa fa-check-circle" ng-show='parameter.status_active == 1'></i> 
+										<i class="fa fa-exclamation-triangle" ng-show='parameter.status_active == 0'></i> 
+									</td>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
+										<i class="fa fa-check-circle" ng-show='parameter.status_writable == 1'></i> 
+										<i class="fa fa-exclamation-triangle" ng-show='parameter.status_writable == 0'></i> 
+									</td>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
 										{{parameter.description}}
 									</td>
-									<td style='width:20%'>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
 										{{parameter.location.name}}
 									</td>
-									<td style='width:10%'>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
 										{{parameter.result}}
 									</td>
-									<td style='width:21%'>
+									<td ng-click='checkParameters(parameter)' style='cursor:pointer'>
 										{{parameter.last_update}}
 									</td>
 								</tr>
@@ -219,6 +266,7 @@
 
 			</div>
 		</div> <!-- end param row -->
+		<hr>
 	</div> <!-- container -->
 
 </div>
